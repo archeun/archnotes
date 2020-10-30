@@ -10,7 +10,7 @@ class ArchNotesEditor extends React.Component {
 
             <CKEditor
                 editor={ClassicEditor}
-                data="<p>Hello from CKEditor 5!</p>"
+                data=""
                 onReady={editor => {
                     // You can store the "editor" and use when it is needed.
                     console.log('Editor is ready to use!', editor);

@@ -3,3 +3,8 @@
 * {
     font-family: 'Quicksand', sans-serif;
 }
+
+.ck-editor__editable_inline {
+    min-height: 470px;
+    max-height: 470px;
+}
