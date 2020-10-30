@@ -1,19 +1,27 @@
 import React from 'react'
-import {Layout, Row, Col, Menu} from 'antd';
+import {Layout, Row, Col, Menu, Button} from 'antd';
 import classnames from 'classnames';
-
+import firebase from "firebase/app";
+import "firebase/auth";
+import "firebase/firestore";
 import styles from '../styles/Home.module.css'
-
-const {Header, Footer, Content} = Layout;
-
 import dynamic from 'next/dynamic'
 import Head from 'next/head'
+import {initSignInButton, signOut, onAuthStateChange} from "../util/arch-auth";
 
-const ArchNotesEditor = dynamic(() => import('../components/arch-notes-editor'), {
-    ssr: false
-});
+const {Content} = Layout;
+const ArchNotesEditor = dynamic(() => import('../components/arch-notes-editor'), {ssr: false});
 
 class Home extends React.Component {
+
+    state = {loggedInUser: null};
+
+    componentDidMount() {
+        initSignInButton('g-signin2');
+        onAuthStateChange((firebaseUser) => {
+            this.setState({loggedInUser: firebaseUser});
+        });
+    }
 
     render() {
         return (
@@ -30,7 +38,11 @@ class Home extends React.Component {
                             <div className={styles.brandNameText}>archeun | NOTES</div>
                         </Col>
                         <Col span={6}>
-                            <div className={classnames(styles.signIn, "g-signin2")} data-onsuccess="onSignIn" data-theme="dark"></div>
+                            {this.state.loggedInUser ? '' : <div id="g-signin2" className={styles.signInOut} data-onsuccess="onSignIn" data-theme="dark"/>}
+                            <Button className={styles.signInOut} onClick={signOut}>
+                                {this.state.loggedInUser ? 'Logout' : ''}
+                            </Button>
+                            <div className={styles.loggedInUserName}>{this.state.loggedInUser ? this.state.loggedInUser.displayName : ''}</div>
                         </Col>
                     </Row>
                     <Content className={styles.content}>

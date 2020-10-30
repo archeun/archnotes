@@ -45,6 +45,14 @@
     min-height: 300px;
 }
 
-.signIn {
+.signInOut {
     float: right;
+    margin-top: 3px;
+}
+
+.loggedInUserName {
+    color: white;
+    float: right;
+    margin-top: 8px;
+    margin-right: 10px;
 }

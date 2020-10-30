@@ -1,8 +1,7 @@
 import React from 'react';
 import 'antd/dist/antd.css';
 import '../styles/global.css';
-import firebase from "firebase/app";
-import "firebase/auth";
+import firebase from "firebase";
 
 function MyApp({Component, pageProps}) {
     // Your web app's Firebase configuration
@@ -16,12 +15,9 @@ function MyApp({Component, pageProps}) {
         appId: "1:914280926964:web:de9b22d7f8cc53c3db58a1"
     };
     // Initialize Firebase
-    if (!firebase.apps.length) {
+    if (!firebase || !firebase.apps.length) {
         firebase.initializeApp(firebaseConfig);
     }
-
-    var provider = new firebase.auth.GoogleAuthProvider();
-
     return <Component {...pageProps} />
 }
 
