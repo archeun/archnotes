@@ -5,7 +5,15 @@
 
 .header {
     margin: 0;
-    padding: 0 20px;
+    padding: 0 25px;
+    height: 50px;
+}
+
+.brandNameText {
+    color: white;
+    font-weight: bold;
+    font-size: 1.5em;
+    margin-top: -8px;
 }
 
 .content {
@@ -26,9 +34,7 @@
 }
 
 .contentRowLeftCol {
-    padding: 10px;
 }
 
 .contentRowRightCol {
-    padding: 10px;
 }
