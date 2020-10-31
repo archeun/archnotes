@@ -1,12 +1,12 @@
 import React from 'react'
-import {Layout, Row, Col, Button} from 'antd';
+import {Layout, Row, Col, Button, Card, Result} from 'antd';
 import classnames from 'classnames';
-import "firebase/auth";
-import "firebase/firestore";
 import styles from '../styles/Home.module.css'
 import dynamic from 'next/dynamic'
 import Head from 'next/head'
 import ArchAuth from "../util/arch-auth";
+import ArchNotesService from "../util/arch-notes-service";
+import {SmileOutlined} from '@ant-design/icons';
 
 const {Content} = Layout;
 const ArchNotesEditor = dynamic(() => import('../components/arch-notes-editor'), {ssr: false});
@@ -14,16 +14,23 @@ const ArchNotesList = dynamic(() => import('../components/arch-notes-list'), {ss
 
 class Home extends React.Component {
 
-    state = {loggedInUser: null};
+    state = {loading: {notesList: true}, loggedInUser: null, notesAndDirectories: []};
 
     componentDidMount() {
         ArchAuth.initSignInButton('g-signin2');
-        ArchAuth.onAuthStateChange((firebaseUser) => {
+        ArchAuth.onAuthStateChange(async (firebaseUser) => {
             this.setState({loggedInUser: firebaseUser});
+            if (firebaseUser) {
+                this.setState({notesAndDirectories: await ArchNotesService.fetchNotesAndDirectories('arunautebel'), loading: {notesList: false}});
+            } else {
+                this.setState({loading: {notesList: false}});
+            }
         });
+
     }
 
     render() {
+        let loggedInUser = this.state.loggedInUser;
         return (
             <div>
                 <Head>
@@ -31,6 +38,7 @@ class Home extends React.Component {
                     <meta name="google-signin-client_id" content="914280926964-idhkbcpv3irnsf9kbuac9sfjtp9j3bt5.apps.googleusercontent.com"/>
                     <meta name="google-signin-cookiepolicy" content="single_host_origin"/>
                     <meta name="google-signin-scope" content="profile email"/>
+                    <title>archeun | NOTES</title>
                 </Head>
                 <Layout className={styles.mainLayout}>
                     <Row className={styles.header}>
@@ -38,19 +46,21 @@ class Home extends React.Component {
                             <div className={styles.brandNameText}>archeun | NOTES</div>
                         </Col>
                         <Col span={6}>
-                            {this.state.loggedInUser ? '' : <div id="g-signin2" className={styles.signInOut} data-theme="dark"/>}
+                            {loggedInUser ? '' : <div id="g-signin2" className={styles.signInOut} data-theme="dark"/>}
                             <Button className={styles.signInOut} onClick={ArchAuth.signOut}>
-                                {this.state.loggedInUser ? 'Logout' : ''}
+                                {loggedInUser ? 'Logout' : ''}
                             </Button>
-                            <div className={styles.loggedInUserName}>{this.state.loggedInUser ? this.state.loggedInUser.displayName : ''}</div>
+                            <div className={styles.loggedInUserName}>{loggedInUser ? loggedInUser.displayName : ''}</div>
                         </Col>
                     </Row>
                     <Content className={styles.content}>
                         <Row className={styles.contentRow}>
-                            <Col className={classnames(styles.contentRowLeftCol)} span={4}>
-                                <ArchNotesList/>
+                            <Col className={classnames(styles.contentRowLeftCol)} span={5}>
+                                <ArchNotesList loggedInUser={this.state.loggedInUser}
+                                               notesAndDirectories={this.state.notesAndDirectories}
+                                               loading={this.state.loading.notesList}/>
                             </Col>
-                            <Col className={classnames(styles.contentRowRightCol)} span={20}>
+                            <Col className={classnames(styles.contentRowRightCol)} span={18}>
                                 <ArchNotesEditor/>
                             </Col>
                         </Row>
