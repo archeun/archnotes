@@ -8,3 +8,7 @@
     min-height: 470px;
     max-height: 470px;
 }
+
+.arch-noteslist-placeholder-card > div.ant-card-body {
+    display: none;
+}

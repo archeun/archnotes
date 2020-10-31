@@ -49,6 +49,16 @@ const ArchAuth = {
             'scope': 'profile email',
             'onsuccess': ArchAuth.signIn
         });
+    },
+
+    getCurrentUser: () => {
+        return {uid: 'arunautebel'};
+        return firebase.auth().currentUser;
+    },
+
+    authorized: (loggedInUserId, action) => {
+        const currentUser = ArchAuth.getCurrentUser();
+        return action && currentUser.uid === loggedInUserId;
     }
 };
 
