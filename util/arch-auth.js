@@ -52,7 +52,6 @@ const ArchAuth = {
     },
 
     getCurrentUser: () => {
-        return {uid: 'arunautebel'};
         return firebase.auth().currentUser;
     },
 
